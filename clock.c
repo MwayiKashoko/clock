@@ -2,7 +2,7 @@
 #include <unistd.h>
 #include <math.h>
 #include <time.h>
-#include "gfx.h"
+#include "gfx3.h"
 
 #define width 1000
 #define height 1000
@@ -77,7 +77,7 @@ int main() {
 		}
 
 		//60 frames per second
-		usleep(16666.67);
+		usleep((useconds_t)16666.67);
 	}
 
 	return 0;
@@ -97,9 +97,8 @@ void drawNumbers() {
 	float s = 2*pi/12;
 
 	for (int i = 1; i < 13; i++) {
-		char c[2];
-		sprintf(c, "%d\0", i);
-
+		char c[3];
+		sprintf(c, "%d", i);
 		gfx_text((width/2)+round(cos(i*s-(pi/2))*(radius-60)), (height/2)+round(sin(i*s-(pi/2))*(radius-60)), c); 
 	}
 }
@@ -133,8 +132,8 @@ void drawHourHand(int increment) {
 void displayTime(int increment) {
 	time_t localT;
 	struct tm *info;
-  time(&localT);
-  info = localtime(&localT);
+  	time(&localT);
+  	info = localtime(&localT);
 	int realHour;
 
 	realHour = info->tm_hour;
@@ -145,7 +144,7 @@ void displayTime(int increment) {
 		realHour = info->tm_hour-12;
 	}
 
-	char c[9];
-	sprintf(c, "%d:%d:%d %s\0", realHour, info->tm_min, time(NULL)%60, info->tm_hour < 13 ? "AM" : "PM");
+	char c[12];
+	sprintf(c, "%d:%d:%d %s", realHour, info->tm_min, (int)(time(NULL)%60), info->tm_hour < 13 ? "AM" : "PM");
 	gfx_text(50, 50, c);
 }
